@@ -9,7 +9,7 @@ module BST
 
   # Each node of the tree is an object holding data, knows its children
   class Node
-    attr_accessor :left_c, :right_c, :data
+    attr_accessor :left, :right, :data
 
     def initialize(data)
       @data = data
@@ -20,16 +20,33 @@ module BST
   class Tree
     attr_accessor :root
 
-    def build_tree(arr)
+    def initialize(arr)
+      @root = nil
+      sorted = clean(arr)
+      last = sorted.length - 1
+      build_tree(sorted, 0, last)
+    end
+
+    def clean(arr)
+      arr.sort.uniq
+    end
+
+    def build_tree(arr, beginning, ending)
+      p 'one lap'
+      p arr
+      p beginning
+      p ending
+      return if beginning > ending
+
       # returns 0-level root node
       # creates balanced binary tree full of Node objects
-
-      # sort and remove duplicates
-      sorted_unique = arr.sort.uniq
       # find middle element, set it as root
-      middle = sorted_unique.length / 2
-      @root = Node.new(sorted_unique[middle])
+      middle = (beginning + ending) / 2
+      @root = Node.new(arr[middle])
       # recursively do the same to left and right halves of the array
+      @root.left = build_tree(arr, beginning, middle - 1)
+      @root.right = build_tree(arr, middle + 1, ending)
+      @root
     end
 
     def insert(node)
@@ -93,13 +110,13 @@ module BST
   end
 end
 
-
 # driver script
-rand_tree = BST::Tree.new.build_tree(Array.new(15) { rand(1..100) })
-rand_tree.balanced?
+rand_arr = Array.new(15) { rand(1..100) }
+p rand_arr
+rand_tree = BST::Tree.new(rand_arr)
+# rand_tree.balanced? # check balance
 # print all elements in level, pre, post, and in order
 # unbalance tree by adding several numbers > 100
-rand_tree.balanced?
+# rand_tree.balanced? # check balance
 # print all elements in level, pre, post, and in order
 p rand_tree
-
