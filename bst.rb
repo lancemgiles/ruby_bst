@@ -20,10 +20,11 @@ module BST
 
   # the tree itself is an object - recursion will create several
   class Tree
-    attr_accessor :root
+    attr_accessor :root, :size
 
     def initialize(arr)
       @root = nil
+      @size = 0
       sorted = clean(arr)
       last = sorted.length - 1
       build_tree(sorted, 0, last)
