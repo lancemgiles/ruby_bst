@@ -13,6 +13,8 @@ module BST
 
     def initialize(data)
       @data = data
+      @left = nil
+      @right = nil
     end
   end
 
@@ -32,10 +34,6 @@ module BST
     end
 
     def build_tree(arr, beginning, ending)
-      p 'one lap'
-      p arr
-      p beginning
-      p ending
       return if beginning > ending
 
       # returns 0-level root node
@@ -46,7 +44,7 @@ module BST
       # recursively do the same to left and right halves of the array
       @root.left = build_tree(arr, beginning, middle - 1)
       @root.right = build_tree(arr, middle + 1, ending)
-      @root
+      arr[middle]
     end
 
     def insert(node)
@@ -112,11 +110,9 @@ end
 
 # driver script
 rand_arr = Array.new(15) { rand(1..100) }
-p rand_arr
 rand_tree = BST::Tree.new(rand_arr)
 # rand_tree.balanced? # check balance
 # print all elements in level, pre, post, and in order
 # unbalance tree by adding several numbers > 100
 # rand_tree.balanced? # check balance
 # print all elements in level, pre, post, and in order
-p rand_tree
