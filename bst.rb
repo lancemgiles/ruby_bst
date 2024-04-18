@@ -75,7 +75,7 @@ module BST
       # accepts block
       # depth-first order
       # yield to provided block; return array if no block given
-      puts "#{node.data} "
+      puts "#{node.data}"
       preorder(node.left)
       preorder(node.right)
     end
@@ -122,5 +122,4 @@ tree = BST::Tree.new(test)
 # unbalance tree by adding several numbers > 100
 # rand_tree.balanced? # check balance
 # print all elements in level, pre, post, and in order
-#rand_tree.preorder(root)
-puts tree.root.data
+tree.preorder(tree.root)
