@@ -83,11 +83,25 @@ module BST
       current_min
     end
 
-    def find(value)
+    def find(value, node = @root)
       # returns node with given value
+      return nil if node.nil?
+
+      if value < node.data
+        find(value, node.left)
+      elsif value > node.data
+        find(value, node.right)
+      else
+        pretty_print(node)
+      end
     end
 
-    def level_order
+    def level_order(node = @root)
+      return if node.nil?
+
+      if block_given?
+        yield(node.data)
+      end
       # accepts block; breadth-first order
       # yield each node to provided block
     end
@@ -95,37 +109,58 @@ module BST
     def inorder(node)
       return if node.nil?
 
-      # accepts block
-      # depth-first order
-      # yield to provided block; return array if no block given
-      inorder(node.left)
-      puts node.data
-      inorder(node.right)
+      if block_given?
+        yield(node)
+      else
+        inorder(node.left)
+        puts node.data
+        inorder(node.right)
+      end
     end
 
     def preorder(node)
       return if node.nil?
 
-      # accepts block!!
-      # yield to provided block; return array if no block given!!
-      puts node.data
-      preorder(node.left)
-      preorder(node.right)
+      if block_given?
+        yield(node.data)
+      else
+        puts node.data
+        preorder(node.left)
+        preorder(node.right)
+      end
     end
 
     def postorder(node)
-      # accepts block
-      # depth-first order
-      # yield to provided block; return array if no block given
       return if node.nil?
 
-      postorder(node.left)
-      postorder(node.right)
-      puts node.data
+      if block_given?
+        yield(node)
+      else
+        postorder(node.left)
+        postorder(node.right)
+        puts node.data
+      end
     end
 
-    def height(node)
+    def height(value, node = @root)
       # number of edges in longest path from given node to leaf node
+      return if node.nil?
+
+      if value < node.data
+        height(value, node.left)
+      elsif value > node.data
+        height(value, node.right)
+      else
+        total_height(node)
+      end
+    end
+
+    def total_height(node)
+      return -1 if node.nil?
+
+      left_height = total_height(node.left)
+      right_height = total_height(node.right)
+      [left_height, right_height].max + 1
     end
 
     def depth(node)
@@ -160,10 +195,6 @@ tree = BST::Tree.new(test)
 # unbalance tree by adding several numbers > 100
 # rand_tree.balanced? # check balance
 # print all elements in level, pre, post, and in order
-
-tree.inorder(tree.root)
-tree.pretty_print
-tree.insert(8)
-tree.pretty_print
-tree.delete(6)
-tree.pretty_print
+#tree.pretty_print
+tree.inorder(tree.root) { |n| p n.left.data * 2 }
+#tree.preorder(tree.root)
