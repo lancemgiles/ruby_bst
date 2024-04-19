@@ -16,10 +16,6 @@ module BST
       @left = nil
       @right = nil
     end
-
-    def to_s
-      @data
-    end
   end
 
   # the tree itself is an object - recursion will create several
@@ -45,13 +41,46 @@ module BST
       node
     end
 
-    def insert(node)
-      # more efficient to not use the array method
+    def insert(value, node = @root)
+      return Node.new(value) if node.nil?
 
+      if value < node.data
+        node.left = insert(value, node.left)
+      elsif value > node.data
+        node.right = insert(value, node.right)
+      end
+
+      node
     end
 
-    def delete(node)
-      # more efficient to not use the array method
+    def delete(value, node = @root)
+      return nil if node.nil?
+
+      if value < node.data
+        node.left = delete(value, node.left)
+      elsif value > node.data
+        node.right = delete(value, node.right)
+      else
+        if node.left.nil?
+          temp = node.right
+          node = nil
+          return temp
+        elsif node.right.nil?
+          temp = node.left
+          node = nil
+          return temp
+        end
+        temp = find_min(node.right)
+        node.data = temp.data
+        node.right = delete(temp.data, node.right)
+      end
+      node
+    end
+
+    def find_min(node)
+      current_min = node
+      current_min = current_min.left while current_min.left
+      current_min
     end
 
     def find(value)
@@ -63,27 +92,36 @@ module BST
       # yield each node to provided block
     end
 
-    def inorder
-      # accepts block
-      # depth-first order
-      # yield to provided block; return array if no block given
-    end
-
-    def preorder(node)
+    def inorder(node)
       return if node.nil?
 
       # accepts block
       # depth-first order
       # yield to provided block; return array if no block given
-      puts "#{node.data}"
+      inorder(node.left)
+      puts node.data
+      inorder(node.right)
+    end
+
+    def preorder(node)
+      return if node.nil?
+
+      # accepts block!!
+      # yield to provided block; return array if no block given!!
+      puts node.data
       preorder(node.left)
       preorder(node.right)
     end
 
-    def postorder
+    def postorder(node)
       # accepts block
       # depth-first order
       # yield to provided block; return array if no block given
+      return if node.nil?
+
+      postorder(node.left)
+      postorder(node.right)
+      puts node.data
     end
 
     def height(node)
@@ -122,4 +160,10 @@ tree = BST::Tree.new(test)
 # unbalance tree by adding several numbers > 100
 # rand_tree.balanced? # check balance
 # print all elements in level, pre, post, and in order
-tree.preorder(tree.root)
+
+tree.inorder(tree.root)
+tree.pretty_print
+tree.insert(8)
+tree.pretty_print
+tree.delete(6)
+tree.pretty_print
