@@ -16,15 +16,18 @@ module BST
       @left = nil
       @right = nil
     end
+
+    def to_s
+      @data.to_s
+    end
   end
 
-  # the tree itself is an object - recursion will create several
+  # the tree is an object
   class Tree
     attr_accessor :root, :size
 
     def initialize(arr = [])
       @root = build_tree(arr.sort.uniq)
-      @size = 0
     end
 
     def build_tree(arr)
@@ -49,7 +52,6 @@ module BST
       elsif value > node.data
         node.right = insert(value, node.right)
       end
-
       node
     end
 
@@ -99,11 +101,17 @@ module BST
     def level_order(node = @root)
       return if node.nil?
 
-      if block_given?
-        yield(node.data)
-      end
-      # accepts block; breadth-first order
-      # yield each node to provided block
+      queue = []
+      queue << node
+      # for 0..
+      #   if block_given?
+      #     yield(queue[0])
+      #     node = queue.shift
+      #   end
+      # end
+      queue << node.left
+      queue << node.right
+      puts queue
     end
 
     def inorder(node)
@@ -195,6 +203,6 @@ tree = BST::Tree.new(test)
 # unbalance tree by adding several numbers > 100
 # rand_tree.balanced? # check balance
 # print all elements in level, pre, post, and in order
-#tree.pretty_print
-tree.inorder(tree.root) { |n| p n.left.data * 2 }
+tree.pretty_print
+tree.level_order
 #tree.preorder(tree.root)
