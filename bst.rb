@@ -178,8 +178,19 @@ module BST
       end
     end
 
-    def balanced?
+    def balanced?(node = @root)
       # check if difference between heights of left subtree and right subtree <= 1
+      return true if node.nil?
+
+      left_height = total_height(node.left)
+      right_height = total_height(node.right)
+
+      if ((left_height - right_height).abs <= 1 &&
+        balanced?(node.left) &&
+        balanced?(node.right))
+          return true
+      end
+      false
     end
 
     def rebalance
@@ -207,5 +218,11 @@ tree = BST::Tree.new(test)
 # rand_tree.balanced? # check balance
 # print all elements in level, pre, post, and in order
 tree.pretty_print
-p tree.depth(7)
+p tree.balanced?
+tree.insert(9)
+tree.insert(10)
+tree.insert(20)
+tree.insert(50)
+tree.pretty_print
+p tree.balanced?
 #tree.preorder(tree.root)
