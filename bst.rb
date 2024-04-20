@@ -3,10 +3,6 @@
 module BST
   # Binary Search Tree
 
-  # compare @data of Nodes
-  module Comparable
-  end
-
   # Each node of the tree is an object holding data, knows its children
   class Node
     attr_accessor :left, :right, :data
@@ -24,10 +20,11 @@ module BST
 
   # the tree is an object
   class Tree
-    attr_accessor :root, :size
+    attr_accessor :root, :list
 
     def initialize(arr = [])
-      @root = build_tree(arr.sort.uniq)
+      @list = arr.sort.uniq
+      @root = build_tree(@list)
     end
 
     def build_tree(arr)
@@ -35,10 +32,8 @@ module BST
 
       # returns 0-level root node
       # creates balanced binary tree full of Node objects
-      # find middle element, set it as root
       middle = arr.length / 2
       node = Node.new(arr[middle])
-      # recursively do the same to left and right halves of the array
       node.left = build_tree(arr[0...middle])
       node.right = build_tree(arr[middle + 1..])
       node
@@ -101,17 +96,16 @@ module BST
     def level_order(node = @root)
       return if node.nil?
 
-      queue = []
-      queue << node
-      # for 0..
-      #   if block_given?
-      #     yield(queue[0])
-      #     node = queue.shift
-      #   end
-      # end
-      queue << node.left
-      queue << node.right
-      puts queue
+      queue = [node]
+      result = []
+      until queue.empty?
+        yield(queue) if block_given?
+        node = queue.shift
+        result << node.data
+        queue << node.left if node.left
+        queue << node.right if node.right
+      end
+      result
     end
 
     def inorder(node)
