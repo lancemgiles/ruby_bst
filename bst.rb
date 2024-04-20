@@ -28,7 +28,7 @@ module BST
     end
 
     def build_tree(arr)
-      return nil if arr.empty?
+      return nil unless arr.is_a?(Array) && !arr.empty?
 
       # returns 0-level root node
       # creates balanced binary tree full of Node objects
@@ -108,7 +108,7 @@ module BST
       result
     end
 
-    def inorder(node)
+    def inorder(node = @root)
       return if node.nil?
 
       if block_given?
@@ -185,21 +185,25 @@ module BST
       left_height = total_height(node.left)
       right_height = total_height(node.right)
 
-      if ((left_height - right_height).abs <= 1 &&
-        balanced?(node.left) &&
-        balanced?(node.right))
-          return true
+      if (left_height - right_height).abs <= 1 &&
+      balanced?(node.left) &&
+      balanced?(node.right)
+        return true
       end
+
       false
     end
 
     def rebalance
       # give a traversal method to create a new array
       # give the new array to build_tree
+      @root = build_tree(inorder)
     end
 
     # pre-made pretty print for visualization
     def pretty_print(node = @root, prefix = '', is_left = true)
+      return if node.nil?
+
       pretty_print(node.right, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right
       puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.data}"
       pretty_print(node.left, "#{prefix}#{is_left ? '    ' : '│   '}", true) if node.left
@@ -225,4 +229,8 @@ tree.insert(20)
 tree.insert(50)
 tree.pretty_print
 p tree.balanced?
+tree.rebalance
+tree.pretty_print
+p tree.balanced?
+tree.pretty_print
 #tree.preorder(tree.root)
