@@ -20,11 +20,10 @@ module BST
 
   # the tree is an object
   class Tree
-    attr_accessor :root, :list
+    attr_accessor :root
 
     def initialize(arr = [])
-      @list = arr.sort.uniq
-      @root = build_tree(@list)
+      @root = build_tree(arr.sort.uniq)
     end
 
     def build_tree(arr)
@@ -120,7 +119,7 @@ module BST
       end
     end
 
-    def preorder(node)
+    def preorder(node = @root)
       return if node.nil?
 
       if block_given?
@@ -132,7 +131,7 @@ module BST
       end
     end
 
-    def postorder(node)
+    def postorder(node = @root)
       return if node.nil?
 
       if block_given?
@@ -212,25 +211,27 @@ module BST
 end
 
 # driver script
-# rand_arr = Array.new(15) { rand(1..100) }
-# last = sanitized_arr.length - 1
-test = [1, 2, 3, 4, 5, 6, 7]
+test = Array.new(15) { rand(1..100) }
 tree = BST::Tree.new(test)
-# rand_tree.balanced? # check balance
+puts tree.balanced? # check balance
+tree.pretty_print
 # print all elements in level, pre, post, and in order
+puts tree.level_order
+puts tree.preorder
+puts tree.postorder
+puts tree.inorder
 # unbalance tree by adding several numbers > 100
-# rand_tree.balanced? # check balance
-# print all elements in level, pre, post, and in order
-tree.pretty_print
-p tree.balanced?
-tree.insert(9)
-tree.insert(10)
-tree.insert(20)
+tree.insert(99)
+tree.insert(98)
+tree.insert(75)
 tree.insert(50)
+puts tree.balanced? # check balance
+# print all elements in level, pre, post, and in order
+puts tree.level_order
+puts tree.preorder
+puts tree.postorder
+puts tree.inorder
 tree.pretty_print
-p tree.balanced?
 tree.rebalance
 tree.pretty_print
 p tree.balanced?
-tree.pretty_print
-#tree.preorder(tree.root)
