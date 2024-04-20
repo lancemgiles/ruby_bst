@@ -165,8 +165,17 @@ module BST
       [left_height, right_height].max + 1
     end
 
-    def depth(node)
+    def depth(value, node = @root, current_depth = 0)
       # number of edges in path from given node to the tree's root
+      return if node.nil?
+
+      if value < node.data
+        depth(value, node.left, current_depth + 1)
+      elsif value > node.data
+        depth(value, node.right, current_depth + 1)
+      else
+        current_depth
+      end
     end
 
     def balanced?
@@ -198,5 +207,5 @@ tree = BST::Tree.new(test)
 # rand_tree.balanced? # check balance
 # print all elements in level, pre, post, and in order
 tree.pretty_print
-tree.level_order
+p tree.depth(7)
 #tree.preorder(tree.root)
